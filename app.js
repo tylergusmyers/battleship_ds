@@ -1,4 +1,4 @@
-function gridCreate(row, column) {
+const gridCreate = (row, column) => {
     let arr = [];
     for (let i = 0; i < row; i++ ) {
         arr[i] = [];
@@ -11,5 +11,12 @@ function gridCreate(row, column) {
 
 const grid = gridCreate(3, 3);
 // Math.floor(Math.random() * 10);
-grid[1][2] = 9;
-console.log(grid);
+
+
+// This will be for the letter input
+const letterToNum = (row, letter) => {
+    const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    gridCreate(row, letters.indexOf(letter));
+}   
+
+console.log(letterToNum(10, "D"));
