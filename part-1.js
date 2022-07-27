@@ -14,13 +14,20 @@ const gridCreate = (row, column) => {
 
 // This will place one random ship (represented by 'X') on the grid.
 const gridPlacement = (array) => {
-    num1 = Math.floor(Math.random() * 3);
-    num2 = Math.floor(Math.random() * 3);
-    num3 = Math.floor(Math.random() * 3);
-    num4 = Math.floor(Math.random() * 3);
-    array[num1][num2] = "X";
-    array[num3][num4] = "X";
-}
+    let num1 = Math.floor(Math.random() * 3);
+    let num2 = Math.floor(Math.random() * 3);
+    let num3 = Math.floor(Math.random() * 3);
+    let num4 = Math.floor(Math.random() * 3);
+    // need to make sure     [num1][num2] != [num3][num4]
+    if (array[num1][num2] === array[num3][num4]) {
+        gridPlacement(array);
+        return;
+     } else {
+        array[num1][num2] = "X";
+        array[num3][num4] = "X";
+     }
+    }
+
 
 // OVERALL GAME PLAY.
 let pressedKey = readlineSync.keyIn("Press any key to start the game.");
