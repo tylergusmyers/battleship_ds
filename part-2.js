@@ -25,11 +25,27 @@ const gridCreate = (row, column) => {
 }
 grid  = gridCreate(10, 10);
 
+const overflowCheck = (startAndLength) => {
+    console.log('tyler');
+    for (let i = 0; i < startAndLength.length + 1; i++) {
+        if (startAndLength[i][0] + startAndLength[i][1] > 10) {
+            startAndLength[i][0] = 1 + startAndLength[i][0] - startAndLength[i][1];
+            console.log(startAndLength);
+            return startAndLength;
+            verticalOrHorizontal(startAndLength);
+        } else {
+            console.log(startAndLength);
+            verticalOrHorizontal(startAndLength);
+        }
+    }   
+}
+
 const coordinatesCheck = (coordinates) => {
     if (array.includes(coordinates)){
         startingSpot();
     }
 }
+
 
 const horizontal = (item, grid) => {
     console.log(item[0], item[1], 'horiz');
@@ -49,27 +65,27 @@ const vertical = (item, grid) => {
     console.log(grid);
 }
 
-const verticalOrHorizontal = (lengthAndStart) => {
-    console.log(lengthAndStart);
-    for (item in lengthAndStart) {
+const verticalOrHorizontal = (startAndLength) => {
+    console.log(startAndLength);
+    for (item in startAndLength) {
         let direction = Math.floor(Math.random() * 2);
         if (direction < 0.5) {
-            horizontal(lengthAndStart[item], grid);
+            horizontal(startAndLength[item], grid);
         } else {
-            vertical(lengthAndStart[item], grid);
+            vertical(startAndLength[item], grid);
         }
     }
 }
 
 // Math.floor(Math.random() * 3);
 const startingSpot = (grid) => {
-    let lengthAndStart = [];
+    let startAndLength = [];
     for (ship in shipLengths) {
         const startingSpot = Math.floor(Math.random() * (grid.length));
-        lengthAndStart.push([startingSpot, shipLengths[ship]]);
+        startAndLength.push([startingSpot, shipLengths[ship]]);
     }
-    // console.log(lengthAndStart);
-    verticalOrHorizontal(lengthAndStart);
+    // console.log(startAndLength);
+    overflowCheck(startAndLength);
 }
 startingSpot(gridCreate(10,10));
 
