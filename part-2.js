@@ -35,7 +35,7 @@ const horizontal = (item, grid) => {
 const vertical = (item, grid) => {
     console.log(item[0], item[1] , 'vert');
     for (let i = item[1]; i > 0; i--) {
-        grid[item[1]][item[0] + i] = "X";
+        grid[item[1]][Number(item[0]) + i] = "X";
     }
     console.log(grid);
 }
