@@ -1,5 +1,6 @@
 const readlineSync = require('readline-sync');
-let boatsLeft;
+let boatsLeft = 2;
+let guessesArray = [];
 
 const gridCreate = (row, column) => {
     let arr = [];
@@ -29,52 +30,75 @@ const gridPlacement = (array) => {
 }
 //   let guessesArray = [];
 const gameGrid = () => {
-    let guessesArray = [];
     let grid = gridCreate(3, 3);
     gridPlacement(grid);
-    return ([grid, guessesArray]); 
+    return (grid); 
 }
+
 const pressStartKey = () => {
     let pressedKey = readlineSync.keyIn("Press any key to start the game.");
-}
-
-const entry = (pressedKey) => {
     if (pressedKey) { 
-        let guessOne = readlineSync.question("Enter a location to strike ie 'A2'");
-        return guessOne;
-    } 
+        validEntry(boatsLeft, guessesArray);
+    }
 }
 
-const validEntry = () => {
-            const gridLocations = ["A1", "B1", "C1", "A2", "B2", "C2", "A3", "B3", "C3"];
-            let guess = readlineSync.question("Enter a location to strike ie 'A2'");
-        if (guessesArray.includes(guess)) {
-            console.log("You have already picked this location. Miss!")
-            validEntry();
-        } else {   
-            do {
-                if (gridLocations.includes(guess)) {
-                    guessConverter(guess);
-                } else {
-                    console.log("Invalid Entry");
-                    validEntry();
-                }
-            } while (guess);
-        }    
-}
+const validEntry = (boatsLeft, guessesArray) => {
+        const gridLocations = ["A1", "B1", "C1", "A2", "B2", "C2", "A3", "B3", "C3"];
+        let guess = readlineSync.question("Enter a location to strike ie 'A2'");  
+        if (gridLocations.includes(guess)) {
+            console.log( {guess, boatsLeft, grid} );
+            guessConverter(guess, boatsLeft, guessesArray);
+        } else {
+            console.log("Invalid Entry");
+            validEntry(boatsLeft, guessesArray);
+        }
+}    
 
-const guessConverter = (guess) => {
+
+const guessConverter = (guess, boatsLeft, guessesArray) => {
     [rowLetter, columnNumber] = [...guess.split('')];
     columnNumber = Number(columnNumber);
     const letters = ["A", "B", "C"];
     rowNumber = (letters.indexOf(rowLetter));
     let convertedGuess = [rowNumber, columnNumber, rowLetter];
-    if (boatsLeft === 2) {
-        guessesArray.push(convertedGuess);
-        gamePlay(convertedGuess);
+    console.log(guessesArray);
+    repeat(convertedGuess, boatsLeft, guessesArray);
+}
+
+function arrayEquals(a, b) {
+    return Array.isArray(a) &&
+        Array.isArray(b) &&
+        a.length === b.length &&
+        a.every((val, index) => val === b[index]);
+}
+
+const repeat = (convertedGuess, boatsLeft, guessesArray) => {
+    console.log(convertedGuess, boatsLeft, guessesArray);
+    if (guessesArray.includes(String(convertedGuess))) {
+        console.log("You have already picked this location. Miss!");
+        validEntry(boatsLeft, guessesArray);
     } else {
-        guessesArray.push(convertedGuess);
-        gamePlay(convertedGuess);
+        guessesArray.push(String(convertedGuess));
+        if (boatsLeft === 2) {
+            boatsLeft--;
+            gamePlay(convertedGuess, grid, boatsLeft);
+        } else {
+            gamePlay(convertedGuess, grid, boatsLeft);
+        }
+    }
+}
+
+const gamePlay = (convertedGuess, grid, boatsLeft) => {
+    [rowNumber, columnNumber, rowLetter] = [...convertedGuess];
+    if (grid[rowNumber][columnNumber - 1] != "X") {
+        console.log('You have missed!'); 
+        validEntry(boatsLeft, guessesArray);
+    }  else if (grid[rowNumber][columnNumber - 1] === "X" && boatsLeft === 1) {
+        console.log("Hit. You have sunk a battleship. 1 ship remaining.");
+        boatsLeft--;
+        validEntry(boatsLeft, guessesArray);
+    }  else if (grid[rowNumber][columnNumber - 1] === "X" && boatsLeft === 0) {
+        askPlayAgain();
     }
 }
 
@@ -87,31 +111,12 @@ const askPlayAgain = () => {
         }
 }
 
-const gamePlay = (convertedGuess, grid) => {
-    console.log('hello');
-    [rowNumber, columnNumber, rowLetter] = [...convertedGuess];
-    console.log(rowNumber, columnNumber, rowLetter);
-    if (grid[rowNumber][columnNumber - 1] != "X") {
-        console.log('You have missed!'); 
-        validEntry();
-    }  else if (grid[rowNumber][columnNumber - 1] === "X" && boatsLeft === 2) {
-        console.log("Hit. You have sunk a battleship. 1 ship remaining.");
-        validEntry();
-    }  else if (grid[rowNumber][columnNumber - 1] === "X" && boatsLeft === 1) {
-        askPlayAgain();
-    }
-}
-
 const playGame = () => {
     boatsLeft = 2;
-    [grid, guessesArray]  = [...gameGrid()];
+    guessesArray = [];
+    grid  = gameGrid();
+    console.log(grid);
     pressStartKey();
-    console.log(grid, guessesArray);
-    validEntry();
-    // gamePlayFirst(convertedGuessOne, grid);
-    // console.log(tyler);
 }
 
 playGame();
-
-export { gridCreate };
