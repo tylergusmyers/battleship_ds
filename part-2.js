@@ -5,6 +5,8 @@ let unitsLeft =  17;
 let guessesArray = [];
 let coordinates = [];
 
+const hasDuplicates = (array) => array.length !== new Set(array).size;
+
 const validGridLocations = (lettersArray) => {
     let array = [];
     for (let i = 1; i < 11; i++) {
@@ -23,72 +25,59 @@ const gridCreate = (row, column) => {
     }
     return array;
 }
-grid  = gridCreate(10, 10);
 
-const overflowCheck = (startAndLength) => {
-    console.log('tyler');
-    for (let i = 0; i < startAndLength.length + 1; i++) {
-        if (startAndLength[i][0] + startAndLength[i][1] > 10) {
-            startAndLength[i][0] = 1 + startAndLength[i][0] - startAndLength[i][1];
-            console.log(startAndLength);
-            return startAndLength;
-            verticalOrHorizontal(startAndLength);
-        } else {
-            console.log(startAndLength);
-            verticalOrHorizontal(startAndLength);
+const overflowCheck = (startAndLength, grid) => {
+    for (let i = 0; i < startAndLength.length; i++) {
+        if ((startAndLength[i][0] + startAndLength[i][2]) > 10) {
+            startAndLength[i][0] = 1 + startAndLength[i][0] - startAndLength[i][2];
+        } else if ((startAndLength[i][1] + startAndLength[i][2]) > 10) {
+            startAndLength[i][1] = 1 + startAndLength[i][1] - startAndLength[i][2];
         }
-    }   
+        console.log(startAndLength);
+    } 
+    // console.log(startAndLength);
+    verticalOrHorizontal(startAndLength);
 }
 
 const coordinatesCheck = (coordinates) => {
-    if (array.includes(coordinates)){
-        startingSpot();
+    if (hasDuplicates(coordinates)) {
+        startingSpot(gridCreate(10, 10));
+    } else {
+        console.log(coordinates, "hello");
     }
 }
 
-
-const horizontal = (item, grid) => {
-    console.log(item[0], item[1], 'horiz');
-    for (let i = 0; i < item[1]; i++) {
-        grid[item[1]][item[0] + i] = "X";
-    }
-    console.log(coordinates);
-    console.log(grid);
-}
-
-const vertical = (item, grid) => {
-    console.log(item[0], item[1] , 'vert');
-    for (let i = 0; i < item[1]; i++) {
-      grid[item[1] + i][item[0]] = "X";
-    }
-    console.log(coordinates);
-    console.log(grid);
-}
+// place X -- grid[item[0] + i][item[1]] = "X";
 
 const verticalOrHorizontal = (startAndLength) => {
+    let coordinates = [];
     console.log(startAndLength);
-    for (item in startAndLength) {
-        let direction = Math.floor(Math.random() * 2);
-        if (direction < 0.5) {
-            horizontal(startAndLength[item], grid);
-        } else {
-            vertical(startAndLength[item], grid);
-        }
-    }
+    // for (item in startAndLength) {
+    //     console.log(startAndLength[item]);
+    //     let direction = Math.floor(Math.random() * 2);        
+    //         if (direction < 0.5) {
+    //             for (val in item) {
+    //                 coordinates.push(`${startAndLength[item][0]},${startAndLength[item][1]}`);
+    //             }
+    //         } else {
+    //             for (val in item) {
+    //                 coordinates.push(`${startAndLength[item]},${startAndLength[item]}`);
+    //             }
+    //         }
+    // }
 }
 
 // Math.floor(Math.random() * 3);
 const startingSpot = (grid) => {
     let startAndLength = [];
     for (ship in shipLengths) {
-        const startingSpot = Math.floor(Math.random() * (grid.length));
-        startAndLength.push([startingSpot, shipLengths[ship]]);
+        const startingSpot1 = Math.floor(Math.random() * (grid.length));
+        const startingSpot2 = Math.floor(Math.random() * (grid.length));
+        startAndLength.push([startingSpot1, startingSpot2 ,shipLengths[ship]]);
     }
-    // console.log(startAndLength);
-    overflowCheck(startAndLength);
+    overflowCheck(startAndLength, grid);
 }
-startingSpot(gridCreate(10,10));
-
+startingSpot(gridCreate(10, 10));
 
 const pressStartKey = () => {
     let pressedKey = readlineSync.keyIn("Press any key to start the game.");
@@ -97,16 +86,15 @@ const pressStartKey = () => {
     }
 }
 
-
 const validEntry = (unitsLeft, guessesArray) => {
-    const gridLocations = validGridLocations(letters);
+    let gridLocations = validGridLocations(letters);
     let guess = readlineSync.question("Enter a location to strike ie 'A2'");  
-    if (gridLocations.includes(guess)) {
-        console.log( {guess, unitsLeft, grid} );
-        guessConverter(guess, unitsLeft, guessesArray);
-    } else {
-        console.log("Invalid Entry");
-        validEntry(unitsLeft, guessesArray);
+    for (let i = 0; i < gridLocations.length; i++) {
+        if (gridLocations[i].includes(guess)) {
+            guessConverter(guess, unitsLeft, guessesArray);
+        } else {
+            validEntry(unitsLeft, guessesArray);
+        }
     }
 }    
 
@@ -163,8 +151,6 @@ const playGame = () => {
     guessesArray = [];
     coordinates = [];
     grid  = gridCreate(10, 10);
-    console.log(grid);
     pressStartKey();
 }
 
-// playGame();
