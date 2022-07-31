@@ -3,6 +3,7 @@ const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 const shipLengths = [2, 3, 3, 4, 5];
 let unitsLeft =  17;
 let guessesArray = [];
+let coordinates = [];
 
 const validGridLocations = (lettersArray) => {
     let array = [];
@@ -24,23 +25,32 @@ const gridCreate = (row, column) => {
 }
 grid  = gridCreate(10, 10);
 
+const coordinatesCheck = (coordinates) => {
+    if (array.includes(coordinates)){
+        startingSpot();
+    }
+}
+
 const horizontal = (item, grid) => {
     console.log(item[0], item[1], 'horiz');
-    for (let i = item[1]; i > 0; i--) {
-        grid[item[1] + i][item[0]] = "X";
+    for (let i = 0; i < item[1]; i++) {
+        grid[item[1]][item[0] + i] = "X";
     }
+    console.log(coordinates);
     console.log(grid);
 }
 
 const vertical = (item, grid) => {
     console.log(item[0], item[1] , 'vert');
-    for (let i = item[1]; i > 0; i--) {
-        grid[item[1]][Number(item[0]) + i] = "X";
+    for (let i = 0; i < item[1]; i++) {
+      grid[item[1] + i][item[0]] = "X";
     }
+    console.log(coordinates);
     console.log(grid);
 }
 
 const verticalOrHorizontal = (lengthAndStart) => {
+    console.log(lengthAndStart);
     for (item in lengthAndStart) {
         let direction = Math.floor(Math.random() * 2);
         if (direction < 0.5) {
@@ -55,10 +65,10 @@ const verticalOrHorizontal = (lengthAndStart) => {
 const startingSpot = (grid) => {
     let lengthAndStart = [];
     for (ship in shipLengths) {
-        const startingSpot = Math.floor(Math.random() * (grid.length - shipLengths[ship]));
+        const startingSpot = Math.floor(Math.random() * (grid.length));
         lengthAndStart.push([startingSpot, shipLengths[ship]]);
     }
-    console.log(lengthAndStart);
+    // console.log(lengthAndStart);
     verticalOrHorizontal(lengthAndStart);
 }
 startingSpot(gridCreate(10,10));
@@ -135,6 +145,7 @@ const askPlayAgain = () => {
 const playGame = () => {
     unitsLeft = 17;
     guessesArray = [];
+    coordinates = [];
     grid  = gridCreate(10, 10);
     console.log(grid);
     pressStartKey();
