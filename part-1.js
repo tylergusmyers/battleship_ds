@@ -61,7 +61,7 @@ const guessConverter = (guess, boatsLeft, guessesArray) => {
     const letters = ["A", "B", "C"];
     rowNumber = (letters.indexOf(rowLetter));
     let convertedGuess = [rowNumber, columnNumber, rowLetter];
-    console.log(guessesArray);
+    console.log(boatsLeft + "tyler");
     repeat(convertedGuess, boatsLeft, guessesArray);
 }
 
