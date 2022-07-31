@@ -3,14 +3,14 @@ let boatsLeft = 2;
 let guessesArray = [];
 
 const gridCreate = (row, column) => {
-    let arr = [];
+    let array = [];
     for (let i = 0; i < row; i++ ) {
-        arr[i] = [];
+        array[i] = [];
         for(let j = 0; j < column; j++){
-            arr[i][j]= [];
+            array[i][j]= [];
         }
     }
-    return arr;
+    return array;
 }
 
 const gridPlacement = (array) => {
@@ -63,13 +63,6 @@ const guessConverter = (guess, boatsLeft, guessesArray) => {
     let convertedGuess = [rowNumber, columnNumber, rowLetter];
     console.log(boatsLeft + "tyler");
     repeat(convertedGuess, boatsLeft, guessesArray);
-}
-
-function arrayEquals(a, b) {
-    return Array.isArray(a) &&
-        Array.isArray(b) &&
-        a.length === b.length &&
-        a.every((val, index) => val === b[index]);
 }
 
 const repeat = (convertedGuess, boatsLeft, guessesArray) => {
