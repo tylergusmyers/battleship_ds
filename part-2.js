@@ -5,7 +5,7 @@ let unitsLeft =  17;
 let guessesArray = [];
 let coordinates = [];
 
-const hasDuplicates = (array) => array.length !== new Set(array).size;
+const hasDuplicate = (array) => array.length !== new Set(array).size;
 
 const validGridLocations = (lettersArray) => {
     let array = [];
@@ -30,42 +30,64 @@ const overflowCheck = (startAndLength, grid) => {
     for (let i = 0; i < startAndLength.length; i++) {
         if ((startAndLength[i][0] + startAndLength[i][2]) > 10) {
             startAndLength[i][0] = 1 + startAndLength[i][0] - startAndLength[i][2];
-        } else if ((startAndLength[i][1] + startAndLength[i][2]) > 10) {
+        } 
+        if ((startAndLength[i][1] + startAndLength[i][2]) > 10) {
             startAndLength[i][1] = 1 + startAndLength[i][1] - startAndLength[i][2];
         }
         console.log(startAndLength);
     } 
-    // console.log(startAndLength);
     verticalOrHorizontal(startAndLength);
 }
 
-const coordinatesCheck = (coordinates) => {
-    if (hasDuplicates(coordinates)) {
+const coordinateDuplicateCheck = (coordinates) => {
+    if (hasDuplicate(coordinates)) {
         startingSpot(gridCreate(10, 10));
     } else {
-        console.log(coordinates, "hello");
+        console.log(coordinates);
+        placeBoats(coordinates);
     }
 }
 
-// place X -- grid[item[0] + i][item[1]] = "X";
+const coordinateSpread = (num1, num2) => {
+    // console.log(num1, num2);
+    let array = [];
+    for (let i = 0; i < num2; i++) {
+        array.push((num1 - 1) + (num2 - i));
+    }
+    return array;
+}
+
+const spreadArray = (xArray, yArray) => {
+    if (xArray.length === 1) {
+        for (let i = 0; i < yArray.length; i++) {
+            coordinates.push(`${xArray[0]},${yArray[i]}`);
+        }
+    }
+    if (yArray.length === 1) {
+        for (let i = 0; i < xArray.length; i++) {
+            coordinates.push(`${xArray[i]},${yArray[0]}`);
+        }
+    } 
+    return coordinates;
+} 
+
+const placeBoats = (coordinates) => {
+    grid[item[0] + i][item[1]] = "X";
+}
 
 const verticalOrHorizontal = (startAndLength) => {
-    let coordinates = [];
-    console.log(startAndLength);
-    // for (item in startAndLength) {
-    //     console.log(startAndLength[item]);
-    //     let direction = Math.floor(Math.random() * 2);        
-    //         if (direction < 0.5) {
-    //             for (val in item) {
-    //                 coordinates.push(`${startAndLength[item][0]},${startAndLength[item][1]}`);
-    //             }
-    //         } else {
-    //             for (val in item) {
-    //                 coordinates.push(`${startAndLength[item]},${startAndLength[item]}`);
-    //             }
-    //         }
-    // }
-}
+    for (item in startAndLength) {
+        let direction = Math.floor(Math.random() * 2);        
+        if (direction < 0.5) {
+            coordinates = spreadArray((coordinateSpread(startAndLength[item][0],startAndLength[item][2])), [startAndLength[item][1]]);  
+        } else {
+            coordinates = spreadArray([startAndLength[item][0]], (coordinateSpread(startAndLength[item][1], startAndLength[item][2])));  
+        } 
+    }     
+    coordinateDuplicateCheck(coordinates);
+}    
+
+// Then make sure none of the coordinates overlap
 
 // Math.floor(Math.random() * 3);
 const startingSpot = (grid) => {
